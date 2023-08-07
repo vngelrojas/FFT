@@ -28,6 +28,7 @@ private:
     bool nextBlockReady = false; //temporary boolean tells us whether the next FFT block is ready to be rendered
 public:
     
-
+    SpectrogramComponent() : forwardFFT(fftOrder),
+        spectrogramImage(juce::Image::RGB, 512, 512, true){}
 
 };

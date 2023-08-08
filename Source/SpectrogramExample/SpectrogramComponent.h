@@ -91,4 +91,7 @@ public:
             repaint();
         }
     }
+
+    void prepareToPlay(int, double) override {}
+    void releaseResources() override {}
 };

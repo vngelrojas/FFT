@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "SpectrogramExample/SpectrogramComponent.h"
 
 //==============================================================================
 /**
@@ -57,6 +58,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
+    SpectrogramComponent fft;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FFTAudioProcessor)
 };

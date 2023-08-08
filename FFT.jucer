@@ -4,6 +4,10 @@
               addUsingNamespaceToJuceHeader="1" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="MNRHlp" name="FFT">
     <GROUP id="{FE2CF22E-0B16-6886-FEC3-F0C0A323B288}" name="Source">
+      <GROUP id="{0A2745C3-1A9E-F7C1-9AA2-3D11264DD9A5}" name="SpectrumAnalyzer">
+        <FILE id="G50kwK" name="SpectrumAnalyzer.h" compile="0" resource="0"
+              file="Source/SpectrumAnalyzer/SpectrumAnalyzer.h"/>
+      </GROUP>
       <GROUP id="{E21A98B3-7798-8ADF-8335-882D6F401731}" name="SpectrogramExample">
         <FILE id="Qz9cmR" name="SpectrogramComponent.h" compile="0" resource="0"
               file="Source/SpectrogramExample/SpectrogramComponent.h"/>

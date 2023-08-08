@@ -81,4 +81,14 @@ public:
             spectrogramImage.setPixelAt(rightHandEdge, y, juce::Colour::fromHSV(level, 1.0f, level, 1.0f)); // [5]
         }
     }
+
+    void timerCallback() override
+    {
+        if (nextBlockReady)
+        {
+            drawNextLineOfSpectrogram();
+            nextBlockReady = false;
+            repaint();
+        }
+    }
 };

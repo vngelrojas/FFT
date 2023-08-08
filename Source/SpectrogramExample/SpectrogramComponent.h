@@ -30,5 +30,32 @@ public:
     
     SpectrogramComponent() : forwardFFT(fftOrder),
         spectrogramImage(juce::Image::RGB, 512, 512, true){}
+    void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override
+    {
+        if (bufferToFill.buffer->getNumChannels() > 0)
+        {
+            auto* channelData = bufferToFill.buffer->getReadPointer(0, bufferToFill.startSample);
+            for (auto i = 0; i < bufferToFill.numSamples; ++i)
+                pushNextSampleIntoFifo(channelData[i]);
+        }
+    }
+    void pushNextSampleIntoFifo(float sample)
+    {
+        // if the fifo contains enough data, set a flag to say
+        // that the next line should now be rendered..
+        if (fifoIndex == fftSize)      
+        {
+            if (!nextBlockReady)    
+            {
+                std::fill(fftData.begin(), fftData.end(), 0.0f);
+                std::copy(fifo.begin(), fifo.end(), fftData.begin());
+                nextBlockReady = true;
+            }
+
+            fifoIndex = 0;
+        }
+
+        fifo[(size_t)fifoIndex++] = sample; // [9]
+    }
 
 };

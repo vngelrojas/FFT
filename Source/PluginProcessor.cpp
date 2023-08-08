@@ -150,12 +150,29 @@ void FFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
+    //for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    //{
+    //    auto* channelData = buffer.getWritePointer (channel);
 
         // ..do something to the data...
+        
+    //}
+    for (auto s = 0; s < buffer.getNumSamples(); ++s)
+    {
+        auto sample = 0.f;
+        for (auto ch = 0; ch < buffer.getNumChannels(); ++ch)
+        {
+            auto* channelData = buffer.getReadPointer(ch, s);
+            sample += *channelData;
+
+        }
+
+        fft.pushNextSampleIntoFifo(sample);
+        
+
     }
+    //fft.timerCallback();
+
 }
 
 //==============================================================================

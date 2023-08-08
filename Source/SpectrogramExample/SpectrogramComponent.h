@@ -15,83 +15,139 @@
 class SpectrogramComponent : public juce::AudioAppComponent,
                              private juce::Timer
 {
-    static constexpr auto fftOrder = 10;
-    static constexpr auto fftSize = 1 << fftOrder; // To calculate the corresponding FFT size, we use the left bit shift operator which produces 1024 as binary number 10000000000
-private:
-    juce::dsp::FFT forwardFFT; //object to perform the forward FFT on.
-    juce::Image spectrogramImage;
-
-    std::array<float, fftSize> fifo; // The fifo float array of size 1024 will contain our incoming audio data in samples.
-    std::array<float, fftSize * 2> fftData; //The fftData float array of size 2048 will contain the results of our FFT calculations.
-
-    int fifoIndex = 0; // temp index keeps count of the amount of samples in fifo
-    bool nextBlockReady = false; //temporary boolean tells us whether the next FFT block is ready to be rendered
 public:
-    
-    SpectrogramComponent() : forwardFFT(fftOrder),
-        spectrogramImage(juce::Image::RGB, 512, 512, true){}
-    void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override
+    SpectrogramComponent() :
+#ifdef JUCE_DEMO_RUNNER
+        AudioAppComponent(getSharedAudioDeviceManager(1, 0)),
+#endif
+        forwardFFT(fftOrder),
+        spectrogramImage(Image::RGB, 512, 512, true)
+    {
+        setOpaque(true);
+
+#ifndef JUCE_DEMO_RUNNER
+        RuntimePermissions::request(RuntimePermissions::recordAudio,
+            [this](bool granted)
+            {
+                int numInputChannels = granted ? 2 : 0;
+                setAudioChannels(numInputChannels, 2);
+            });
+#else
+        setAudioChannels(2, 2);
+#endif
+
+        startTimerHz(60);
+        setSize(700, 500);
+    }
+
+    ~SpectrogramComponent() override
+    {
+        shutdownAudio();
+    }
+
+    //==============================================================================
+    void prepareToPlay(int /*samplesPerBlockExpected*/, double /*newSampleRate*/) override
+    {
+        // (nothing to do here)
+    }
+
+    void releaseResources() override
+    {
+        // (nothing to do here)
+    }
+
+    void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override
     {
         if (bufferToFill.buffer->getNumChannels() > 0)
         {
-            auto* channelData = bufferToFill.buffer->getReadPointer(0, bufferToFill.startSample);
+            const auto* channelData = bufferToFill.buffer->getReadPointer(0, bufferToFill.startSample);
+
             for (auto i = 0; i < bufferToFill.numSamples; ++i)
                 pushNextSampleIntoFifo(channelData[i]);
+
+            bufferToFill.clearActiveBufferRegion();
         }
     }
-    void pushNextSampleIntoFifo(float sample)
+
+    //==============================================================================
+    void paint(Graphics& g) override
+    {
+        g.fillAll(Colours::black);
+
+        g.setOpacity(1.0f);
+        g.drawImage(spectrogramImage, getLocalBounds().toFloat());
+    }
+
+    void timerCallback() override
+    {
+        if (nextFFTBlockReady)
+        {
+            drawNextLineOfSpectrogram();
+            nextFFTBlockReady = false;
+            repaint();
+        }
+    }
+
+    void pushNextSampleIntoFifo(float sample) noexcept
     {
         // if the fifo contains enough data, set a flag to say
         // that the next line should now be rendered..
-        if (fifoIndex == fftSize)      
+        if (fifoIndex == fftSize)
         {
-            if (!nextBlockReady)    
+            if (!nextFFTBlockReady)
             {
-                std::fill(fftData.begin(), fftData.end(), 0.0f);
-                std::copy(fifo.begin(), fifo.end(), fftData.begin());
-                nextBlockReady = true;
+                zeromem(fftData, sizeof(fftData));
+                memcpy(fftData, fifo, sizeof(fifo));
+                nextFFTBlockReady = true;
             }
 
             fifoIndex = 0;
         }
 
-        fifo[(size_t)fifoIndex++] = sample; // [9]
+        fifo[fifoIndex++] = sample;
     }
+
     void drawNextLineOfSpectrogram()
     {
         auto rightHandEdge = spectrogramImage.getWidth() - 1;
         auto imageHeight = spectrogramImage.getHeight();
 
         // first, shuffle our image leftwards by 1 pixel..
-        spectrogramImage.moveImageSection(0, 0, 1, 0, rightHandEdge, imageHeight);         // [1]
+        spectrogramImage.moveImageSection(0, 0, 1, 0, rightHandEdge, imageHeight);
 
         // then render our FFT data..
-        forwardFFT.performFrequencyOnlyForwardTransform(fftData.data());                   // [2]
+        forwardFFT.performFrequencyOnlyForwardTransform(fftData);
 
         // find the range of values produced, so we can scale our rendering to
         // show up the detail clearly
-        auto maxLevel = juce::FloatVectorOperations::findMinAndMax(fftData.data(), fftSize / 2); // [3]
+        auto maxLevel = FloatVectorOperations::findMinAndMax(fftData, fftSize / 2);
 
-        for (auto y = 1; y < imageHeight; ++y)                                              // [4]
+        for (auto y = 1; y < imageHeight; ++y)
         {
             auto skewedProportionY = 1.0f - std::exp(std::log((float)y / (float)imageHeight) * 0.2f);
-            auto fftDataIndex = (size_t)juce::jlimit(0, fftSize / 2, (int)(skewedProportionY * fftSize / 2));
-            auto level = juce::jmap(fftData[fftDataIndex], 0.0f, juce::jmax(maxLevel.getEnd(), 1e-5f), 0.0f, 1.0f);
+            auto fftDataIndex = jlimit(0, fftSize / 2, (int)(skewedProportionY * (int)fftSize / 2));
+            auto level = jmap(fftData[fftDataIndex], 0.0f, jmax(maxLevel.getEnd(), 1e-5f), 0.0f, 1.0f);
 
-            spectrogramImage.setPixelAt(rightHandEdge, y, juce::Colour::fromHSV(level, 1.0f, level, 1.0f)); // [5]
+            spectrogramImage.setPixelAt(rightHandEdge, y, Colour::fromHSV(level, 1.0f, level, 1.0f));
         }
     }
 
-    void timerCallback() override
+    enum
     {
-        if (nextBlockReady)
-        {
-            drawNextLineOfSpectrogram();
-            nextBlockReady = false;
-            repaint();
-        }
-    }
+        fftOrder = 10,
+        fftSize = 1 << fftOrder
+    };
 
-    void prepareToPlay(int, double) override {}
-    void releaseResources() override {}
+private:
+    dsp::FFT forwardFFT;
+    Image spectrogramImage;
+
+    float fifo[fftSize];
+    float fftData[2 * fftSize];
+    int fifoIndex = 0;
+    bool nextFFTBlockReady = false;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SpectrogramComponent)
 };
+
+

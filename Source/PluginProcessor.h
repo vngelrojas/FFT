@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "SpectrogramExample/SpectrogramComponent.h"
 #include "SpectrumAnalyzer/SpectrumAnalyzer.h"
+#include "PitchMPM.h"
 
 //==============================================================================
 /**
@@ -59,8 +60,12 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     SpectrogramComponent fft;
     SpectrumAnalyzer fft2;
+    size_t sz = 1024;
+    PitchMPM mpm;
 
 private:
+    juce::dsp::Oscillator<float> osc{ [](float x) {return std::sin(x); } };
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FFTAudioProcessor)
 };

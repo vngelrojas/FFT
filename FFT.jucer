@@ -4,6 +4,9 @@
               addUsingNamespaceToJuceHeader="1" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="MNRHlp" name="FFT">
     <GROUP id="{FE2CF22E-0B16-6886-FEC3-F0C0A323B288}" name="Source">
+      <FILE id="v0xgVJ" name="PitchMPM.h" compile="0" resource="0" file="Source/PitchMPM.h"/>
+      <FILE id="r0x9gN" name="AudioFFT.cpp" compile="1" resource="0" file="Source/AudioFFT.cpp"/>
+      <FILE id="Nd0PpK" name="AudioFFT.h" compile="0" resource="0" file="Source/AudioFFT.h"/>
       <GROUP id="{0A2745C3-1A9E-F7C1-9AA2-3D11264DD9A5}" name="SpectrumAnalyzer">
         <FILE id="G50kwK" name="SpectrumAnalyzer.h" compile="0" resource="0"
               file="Source/SpectrumAnalyzer/SpectrumAnalyzer.h"/>

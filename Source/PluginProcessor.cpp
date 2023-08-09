@@ -19,7 +19,7 @@ FFTAudioProcessor::FFTAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       ),mpm(48000,1024)
+                       ),mpm(48000,100)
 #endif
 {
 }
@@ -102,6 +102,10 @@ void FFTAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     spec.numChannels = getTotalNumOutputChannels();
 
     osc.prepare(spec);
+    gain.prepare(spec);
+
+    osc.setFrequency(220.0f);
+    gain.setGainLinear(0.06f);
 }
 
 void FFTAudioProcessor::releaseResources()
@@ -164,7 +168,11 @@ void FFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     //}
     //fft.timerCallback();
     float pitch = mpm.getPitch(buffer.getReadPointer(0));
-    
+    if (pitch > 0)
+        osc.setFrequency(find(pitch));
+    juce::dsp::AudioBlock<float> audioBlock{ buffer };
+    osc.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+    gain.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     
 
 }

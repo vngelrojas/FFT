@@ -167,7 +167,8 @@ void FFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
 
         }
 
-        fft.pushNextSampleIntoFifo(sample);
+        fft2.pushNextSampleIntoFifo(sample);
+        //fft.pushNextSampleIntoFifo(sample);
         
 
     }

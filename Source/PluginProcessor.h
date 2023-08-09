@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "SpectrogramExample/SpectrogramComponent.h"
+#include "SpectrumAnalyzer/SpectrumAnalyzer.h"
 
 //==============================================================================
 /**
@@ -57,7 +58,7 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     SpectrogramComponent fft;
-
+    SpectrumAnalyzer fft2;
 
 private:
     //==============================================================================

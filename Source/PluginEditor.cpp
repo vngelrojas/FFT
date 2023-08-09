@@ -17,7 +17,8 @@ FFTAudioProcessorEditor::FFTAudioProcessorEditor (FFTAudioProcessor& p)
     // editor's size to whatever you need it to be.
     setSize (400, 300);
 
-    addAndMakeVisible(audioProcessor.fft);
+    //addAndMakeVisible(audioProcessor.fft);
+    addAndMakeVisible(audioProcessor.fft2);
 }
 
 FFTAudioProcessorEditor::~FFTAudioProcessorEditor()
@@ -41,7 +42,9 @@ void FFTAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    audioProcessor.fft.setBounds(getLocalBounds().withSizeKeepingCentre(getWidth() * 0.5, getHeight() * 0.5));
+    //audioProcessor.fft.setBounds(getLocalBounds().withSizeKeepingCentre(getWidth() * 0.5, getHeight() * 0.5));
     //audioProcessor.fft.timerCallback();
+
+    //audioProcessor.fft2.setBounds(getLocalBounds().withSizeKeepingCentre(getWidth() * 0.5, getHeight() * 0.5));
 
 }

@@ -19,7 +19,7 @@ FFTAudioProcessor::FFTAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       ),mpm(48000,100)
+                       ),mpm(44100, 512),gist(512,44100)
 #endif
 {
 }
@@ -167,6 +167,8 @@ void FFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
 
     //}
     //fft.timerCallback();
+
+    //MPM
     float pitch = mpm.getPitch(buffer.getReadPointer(0));
     if (pitch > 0)
         osc.setFrequency(find(pitch));
@@ -174,6 +176,17 @@ void FFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     osc.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     gain.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     
+   // float* start = buffer.getWritePointer(0); // get the pointer to the first sample of the first channel
+   // int size = 512;
+   // std::vector<float> my_vector(start, start + size);
+   // gist.processAudioFrame(my_vector);
+   // float pitch = gist.pitch();
+   // if (pitch > 0)
+   //         osc.setFrequency(pitch);
+   // juce::dsp::AudioBlock<float> audioBlock{ buffer };
+   //osc.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+   //gain.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+
 
 }
 

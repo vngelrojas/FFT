@@ -4,6 +4,43 @@
               addUsingNamespaceToJuceHeader="1" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="MNRHlp" name="FFT">
     <GROUP id="{FE2CF22E-0B16-6886-FEC3-F0C0A323B288}" name="Source">
+      <GROUP id="{2800016F-F1B2-B494-1468-5180B0F12B3D}" name="src">
+        <GROUP id="{BF2B8C32-B4BF-A0B0-03F5-6A65E2CEAA3C}" name="kiss">
+          <FILE id="vAXRWb" name="_kiss_fft_guts.h" compile="0" resource="0"
+                file="Source/src/kiss/_kiss_fft_guts.h"/>
+          <FILE id="jD2I50" name="COPYING" compile="0" resource="1" file="Source/src/kiss/COPYING"/>
+          <FILE id="ETRq4J" name="kiss_fft.c" compile="1" resource="0" file="Source/src/kiss/kiss_fft.c"/>
+          <FILE id="FifWh2" name="kiss_fft.h" compile="0" resource="0" file="Source/src/kiss/kiss_fft.h"/>
+          <FILE id="RogzkK" name="kissfft.hh" compile="0" resource="0" file="Source/src/kiss/kissfft.hh"/>
+          <FILE id="gCCDsX" name="README" compile="0" resource="1" file="Source/src/kiss/README"/>
+        </GROUP>
+        <FILE id="pHumCD" name="AccelerateFFT.cpp" compile="1" resource="0"
+              file="Source/src/AccelerateFFT.cpp"/>
+        <FILE id="YFHLKu" name="AccelerateFFT.h" compile="0" resource="0" file="Source/src/AccelerateFFT.h"/>
+        <FILE id="aHUcrw" name="CMakeLists.txt" compile="0" resource="1" file="Source/src/CMakeLists.txt"/>
+        <FILE id="tGKFnt" name="CoreFrequencyDomainFeatures.cpp" compile="1"
+              resource="0" file="Source/src/CoreFrequencyDomainFeatures.cpp"/>
+        <FILE id="xp40B7" name="CoreFrequencyDomainFeatures.h" compile="0"
+              resource="0" file="Source/src/CoreFrequencyDomainFeatures.h"/>
+        <FILE id="pZ8kBU" name="CoreTimeDomainFeatures.cpp" compile="1" resource="0"
+              file="Source/src/CoreTimeDomainFeatures.cpp"/>
+        <FILE id="WXl3Z1" name="CoreTimeDomainFeatures.h" compile="0" resource="0"
+              file="Source/src/CoreTimeDomainFeatures.h"/>
+        <FILE id="HwGpMI" name="Gist.cpp" compile="1" resource="0" file="Source/src/Gist.cpp"/>
+        <FILE id="DQmLAk" name="Gist.h" compile="0" resource="0" file="Source/src/Gist.h"/>
+        <FILE id="g5sQTt" name="MFCC.cpp" compile="1" resource="0" file="Source/src/MFCC.cpp"/>
+        <FILE id="bUN6ip" name="MFCC.h" compile="0" resource="0" file="Source/src/MFCC.h"/>
+        <FILE id="pZ0U4E" name="OnsetDetectionFunction.cpp" compile="1" resource="0"
+              file="Source/src/OnsetDetectionFunction.cpp"/>
+        <FILE id="nzIrN1" name="OnsetDetectionFunction.h" compile="0" resource="0"
+              file="Source/src/OnsetDetectionFunction.h"/>
+        <FILE id="CyV8qT" name="WindowFunctions.cpp" compile="1" resource="0"
+              file="Source/src/WindowFunctions.cpp"/>
+        <FILE id="rKx5cx" name="WindowFunctions.h" compile="0" resource="0"
+              file="Source/src/WindowFunctions.h"/>
+        <FILE id="jFvlY1" name="Yin.cpp" compile="1" resource="0" file="Source/src/Yin.cpp"/>
+        <FILE id="MEF0fO" name="Yin.h" compile="0" resource="0" file="Source/src/Yin.h"/>
+      </GROUP>
       <FILE id="v0xgVJ" name="PitchMPM.h" compile="0" resource="0" file="Source/PitchMPM.h"/>
       <FILE id="r0x9gN" name="AudioFFT.cpp" compile="1" resource="0" file="Source/AudioFFT.cpp"/>
       <FILE id="Nd0PpK" name="AudioFFT.h" compile="0" resource="0" file="Source/AudioFFT.h"/>

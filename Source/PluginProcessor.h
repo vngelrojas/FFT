@@ -13,6 +13,7 @@
 #include "SpectrumAnalyzer/SpectrumAnalyzer.h"
 #include "PitchMPM.h"
 #include <vector>
+#include "src/Gist.h"
 //==============================================================================
 /**
 */
@@ -60,13 +61,11 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     SpectrogramComponent fft;
     SpectrumAnalyzer fft2;
-    size_t sz = 1024;
-    PitchMPM mpm;
-
+    
 private:
+    PitchMPM mpm;
     juce::dsp::Oscillator<float> osc{ [](float x) {return std::sin(x); } };
     juce::dsp::Gain<float> gain;
-
     std::vector<float> fixed   {  
                                 16.35, 17.32, 18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96, 27.50, 29.14, 30.87,
                                 32.70, 34.65, 36.71, 38.89, 41.20, 43.65, 46.25, 49.00, 51.91, 55.00, 58.27, 61.74,
@@ -78,7 +77,6 @@ private:
                                 2093, 2217, 2349, 2489, 2637, 2794, 2960, 3136, 3322, 3520, 3729, 3951,
                                 4186, 4435, 4699, 4978, 5274, 5588, 5920, 6272, 6645, 7040, 7459, 7902
                                 };
-
     float find(float receivedNumber)
     {
         int closestNumber = fixed[0];
@@ -94,6 +92,11 @@ private:
 
         return closestNumber;
     }
+
+
+
+    Gist<float> gist;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FFTAudioProcessor)
 };

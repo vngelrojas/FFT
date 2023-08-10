@@ -27,8 +27,7 @@ public:
 
 
     {
-        //nsdf.insertMultiple(0, 0.0, bufferSize);
-
+    
     }
 
 
@@ -126,8 +125,6 @@ private:
     std::vector<float> output;
 
     float sampleRate;
-
-    float turningPointX, turningPointY;
 
     juce::Array<int> maxPositions;
     juce::Array<float> periodEstimates;

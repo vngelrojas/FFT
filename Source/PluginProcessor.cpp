@@ -26,6 +26,7 @@ FFTAudioProcessor::FFTAudioProcessor()
 
 FFTAudioProcessor::~FFTAudioProcessor()
 {
+   
 }
 
 //==============================================================================
@@ -150,23 +151,6 @@ void FFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    //AudioSourceChannelInfo info(&buffer,0,buffer.getNumSamples());
-    //for (auto s = 0; s < buffer.getNumSamples(); ++s)
-    //{
-    //    auto sample = 0.f;
-    //    for (auto ch = 0; ch < buffer.getNumChannels(); ++ch)
-    //    {
-    //        auto* channelData = buffer.getReadPointer(ch, s);
-    //        sample += *channelData;
-
-    //    }
-    //    //fft2.getNextAudioBlock();
-    //    fft2.pushNextSampleIntoFifo(sample);
-    //    //fft.pushNextSampleIntoFifo(sample);
-    //    
-
-    //}
-    //fft.timerCallback();
 
     //MPM
     float pitch = mpm.getPitch(buffer.getReadPointer(0));
@@ -176,16 +160,7 @@ void FFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     osc.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     gain.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     
-   // float* start = buffer.getWritePointer(0); // get the pointer to the first sample of the first channel
-   // int size = 512;
-   // std::vector<float> my_vector(start, start + size);
-   // gist.processAudioFrame(my_vector);
-   // float pitch = gist.pitch();
-   // if (pitch > 0)
-   //         osc.setFrequency(pitch);
-   // juce::dsp::AudioBlock<float> audioBlock{ buffer };
-   //osc.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
-   //gain.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+
 
 
 }

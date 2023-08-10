@@ -49,15 +49,11 @@ public:
         periodEstimates.clearQuick();
         ampEstimates.clearQuick();
 
-        //nsdfTimeDomain(audioBuffer);
-        //nsdfFrequencyDomain(audioBuffer);
-
         if (audioBuffer == nullptr)
         {
             DBG("audioBuffer NULL");
             return 0.0f;
         }
-        //nsdf = Array<float> (nsdfFrequencyDomain(audioBuffer).data());
         std::vector<float> _nsdf = nsdfFrequencyDomain(audioBuffer);
         std::vector<int> max_positions = peak_picking(_nsdf);
         std::vector<std::pair<float, float>> estimates;
@@ -190,8 +186,7 @@ private:
     // FFT based methods
     std::vector<float> nsdfFrequencyDomain(const float* audioBuffer)
     {
-        //std::vector<std::complex<float>> acf(size2);
-        //std::vector<float> acf_real{};
+
 
         real.resize(fftSize);
         imag.resize(fftSize);
@@ -222,7 +217,7 @@ private:
 
         fft.init(fftSize);
         fft.fft(input.data(), real.data(), imag.data());
-        //fft.fft(audioBuffer, real.data(), imag.data());
+       
 
         // Complex Conjugate
         for (int i = 0; i < fftSize; ++i)

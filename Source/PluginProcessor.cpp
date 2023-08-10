@@ -151,14 +151,21 @@ void FFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
+    auto rmsLevel = buffer.getRMSLevel(0,0,buffer.getNumSamples());
+    if (rmsLevel < 0.005f)
+        osc.setFrequency(0.f);
+    else
+    {
+        //MPM
+        float pitch = mpm.getPitch(buffer.getReadPointer(0));
+        if (pitch > 0)
+            osc.setFrequency(findNote(pitch));
+        juce::dsp::AudioBlock<float> audioBlock{ buffer };
+        osc.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+        gain.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+    }
 
-    //MPM
-    float pitch = mpm.getPitch(buffer.getReadPointer(0));
-    if (pitch > 0)
-        osc.setFrequency(findNote(pitch));
-    juce::dsp::AudioBlock<float> audioBlock{ buffer };
-    osc.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
-    gain.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+    
     
 
 

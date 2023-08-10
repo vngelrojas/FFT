@@ -66,7 +66,7 @@ public:
     
 private:
     PitchMPM mpm;
-    juce::dsp::Oscillator<float> osc{ [](float x) {return std::sin(x); } };
+    juce::dsp::Oscillator<float> osc{ [](float x) {return std::sin(x); }};
     juce::dsp::Gain<float> gain;
     std::vector<float> notes   {  
                                     16.35, 17.32, 18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96, 27.50, 29.14, 30.87,

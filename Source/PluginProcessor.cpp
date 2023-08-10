@@ -155,7 +155,7 @@ void FFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     //MPM
     float pitch = mpm.getPitch(buffer.getReadPointer(0));
     if (pitch > 0)
-        osc.setFrequency(find(pitch));
+        osc.setFrequency(findNote(pitch));
     juce::dsp::AudioBlock<float> audioBlock{ buffer };
     osc.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     gain.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));

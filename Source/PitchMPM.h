@@ -44,37 +44,45 @@ public:
 
     float getPitch(const float* audioBuffer)
     {
-
+        // Clear old data
         maxPositions.clearQuick();
         periodEstimates.clearQuick();
         ampEstimates.clearQuick();
 
+        // Checking if buffer is empty
         if (audioBuffer == nullptr)
         {
             DBG("audioBuffer NULL");
             return 0.0f;
         }
+
+        // Normalized square difference function 
         std::vector<float> _nsdf = nsdfFrequencyDomain(audioBuffer);
+        // Find the highest maximum between every positively sloped zero crossing and negatively sloped zero crossing
         std::vector<int> max_positions = peak_picking(_nsdf);
+
         std::vector<std::pair<float, float>> estimates;
 
-        //peakPicking();
 
         float highestAmplitude = -FLT_MAX;
 
         for (auto tau : max_positions)
         {
+            // get the larger of the two values
             highestAmplitude = juce::jmax(highestAmplitude, _nsdf[tau]);
 
+            // SMALL_CUTOFF = 0.5
             if (_nsdf[tau] > SMALL_CUTOFF)
             {
                 auto x = parabolic_interpolation(_nsdf, tau);
                 estimates.push_back(x);
+                // Get highest between prev known highest or .second of pair returened by parabolic_interpolation
                 highestAmplitude = std::max(highestAmplitude, std::get<1>(x));
             }
         }
 
-        if (estimates.empty()) return -1;
+        if (estimates.empty()) 
+            return -1;
 
         float actualCutoff = CUTOFF * highestAmplitude;
         float period = 0;
@@ -205,7 +213,6 @@ private:
         if (audioBuffer == nullptr)
             DBG("audioBuffer NULL: autoCorrelation");
 
-        //AudioSampleBuffer paddedAudioBuffer (audioBuffer, 1, fftSize);
         std::vector<float> input(audioBuffer, audioBuffer + bufferSize);
         input.resize(fftSize, 0.0f);
 
@@ -216,7 +223,7 @@ private:
             DBG("input.data() NULL: autoCorrelation post resize");
 
         fft.init(fftSize);
-        fft.fft(input.data(), real.data(), imag.data());
+        fft.fft(input.data(), real.data(), imag.data()); // .data() returns pointer to the underlying element storage 
        
 
         // Complex Conjugate

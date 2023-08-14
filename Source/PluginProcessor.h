@@ -92,12 +92,6 @@ private:
         {
             mid = low + (high - low) / 2;
 
-     /*       int difference = std::abs(noteEstimate - notes[mid]);
-            if (difference < minDifference)
-            {
-                minDifference = difference;
-                close = notes[mid];
-            }*/
 
             if (notes[mid] == noteEstimate)
                 return noteEstimate;
